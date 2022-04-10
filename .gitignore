@@ -2,3 +2,4 @@
 /.idea/
 /*.local/
 .DS_Store
+/src/private.ts

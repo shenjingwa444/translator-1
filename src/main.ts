@@ -1,10 +1,9 @@
 import * as md5 from 'js-md5';
+import {appid, appSecret} from './private';
 
 const https = require('https');
 
 export const translator = (word) => {
-  let appid = '???';
-  const appSecret = '???'
   let salt = Math.random();
   let sign = md5(appid + word + salt + appSecret);
 
@@ -25,10 +24,10 @@ export const translator = (word) => {
     method: 'GET'
   };
 
-  const req = https.request(options, (res) => {
-    res.on('data', (d) => {
+  const request = https.request(options, (response) => {
+    response.on('data', (d) => {
       process.stdout.write(d);
     });
   });
-  req.end();
+  request.end();
 };

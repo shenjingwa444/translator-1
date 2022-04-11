@@ -1,2 +1,2 @@
-export const appid = '20220410001167197'
-export const appSecret = '6bzhZwVuU9wCXJ7K5I1I'
+export const appid = '20220401167197'
+export const appSecret = '6bzhZ9wCXJ7K5I1I'

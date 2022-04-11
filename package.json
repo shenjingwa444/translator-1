@@ -1,9 +1,12 @@
 {
   "name": "translator-1",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/main.js",
+  "files": [
+    "dist/**/*.js"
+  ],
   "bin": {
-    "tl": "src/cli.ts"
+    "tl": "dist/cli.js"
   },
   "scripts": {
     "start": "ts-node-dev src/main.ts"

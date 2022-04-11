@@ -15,7 +15,6 @@ export const translator = (word) => {
     ['salt', salt],
     ['sign', sign]
   ]).toString();
-  console.log(query);
 
   const options = {
     hostname: 'api.fanyi.baidu.com',
@@ -25,8 +24,27 @@ export const translator = (word) => {
   };
 
   const request = https.request(options, (response) => {
-    response.on('data', (d) => {
-      process.stdout.write(d);
+    let chunks = [];
+    response.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+    response.on('end', () => {
+      const string = Buffer.concat(chunks).toString();
+      type BaiduResult = {
+        from: string
+        to: string
+        trans_result: { src: string, dst: string }[]
+        error_code?: string
+        error_msg?: string
+      }
+      const object: BaiduResult = JSON.parse(string);
+      if (object.error_code) {
+        console.error(object.error_msg);
+        process.exit(2)
+      } else {
+        console.log(object.trans_result[0].dst);
+        process.exit(0)
+      }
     });
   });
   request.end();

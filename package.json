@@ -2,6 +2,12 @@
   "name": "translator-1",
   "version": "1.0.0",
   "main": "index.js",
+  "bin": {
+    "tl": "src/cli.ts"
+  },
+  "scripts": {
+    "start": "ts-node-dev src/main.ts"
+  },
   "license": "MIT",
   "dependencies": {
     "commander": "^9.1.0"

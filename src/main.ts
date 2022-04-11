@@ -1,12 +1,17 @@
-import * as md5 from 'js-md5';
+import md5 from 'js-md5';
 
 const https = require('https');
 import {appid, appSecret} from './private';
+import {IncomingMessage} from 'http';
 
-const errorMap = {
+type ErrorMap = {
+  [key:string]:string
+}
+
+const errorMap: ErrorMap = {
   52000: '成功',
   52001: '请求超时,请重试 ',
-  52002:'系统错误,请重试',
+  52002: '系统错误,请重试',
   52003: '未授权用户,请检查appid是否正确或者服务是否开通  ',
   54000: '必填参数为空,请检查是否少传参数 ',
   54001: '签名错误,请检查您的签名生成方法 ',
@@ -23,14 +28,21 @@ const errorMap = {
 };
 
 
-export const translator = (word) => {
-  let salt = Math.random();
+export const translator = (word: string) => {
+  let salt = Math.random().toString();
   let sign = md5(appid + word + salt + appSecret);
-
+  let from, to;
+  if (/[a-zA-Z]/.test(word[0])) {
+    from = 'en';
+    to = 'zh';
+  } else {
+    from = 'zh';
+    to = 'en';
+  }
   const query = new URLSearchParams([
     ['q', word],
-    ['from', 'en'],
-    ['to', 'zh'],
+    ['from', from],
+    ['to', to],
     ['appid', appid],
     ['salt', salt],
     ['sign', sign]
@@ -43,9 +55,9 @@ export const translator = (word) => {
     method: 'GET'
   };
 
-  const request = https.request(options, (response) => {
-    let chunks = [];
-    response.on('data', (chunk) => {
+  const request = https.request(options, (response: IncomingMessage) => {
+    let chunks:Buffer[] = [];
+    response.on('data', (chunk:Buffer) => {
       chunks.push(chunk);
     });
     response.on('end', () => {
@@ -62,7 +74,9 @@ export const translator = (word) => {
         console.error(errorMap[object.error_code] || object.error_msg);
         process.exit(2);
       } else {
-        console.log(object.trans_result[0].dst);
+        object.trans_result.map(obj=>{
+          console.log(obj.dst);
+        });
         process.exit(0);
       }
     });

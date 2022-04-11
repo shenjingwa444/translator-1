@@ -6,7 +6,7 @@ program
   .name('tl')
   .usage('<English>')
   .argument('<English>')
-  .action((english) => {
+  .action((english:string) => {
     translator(english)
   });
 
